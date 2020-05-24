@@ -3,3 +3,4 @@ venv
 .env
 myspider.log
 geckodriver.log
+scrapinghub.yml
