@@ -6,11 +6,11 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 import psycopg2
 from decouple import config
-from datetime import date
+from datetime import date, timedelta
 
 import hashlib
 import random
-from datetime import timedelta
+
 
 from django.utils import timezone
 
@@ -31,19 +31,26 @@ class ScrapyJobItPipeline:
         hashed_items_db = self.cur.execute("select * from job_offert where still_active='True'")
         hashed_list = [item.hash_id for item in hashed_items_db]
 
-    def close_spider(self, spider):#TODO
-        not_scrapped_items = JobOffert.objects.filter(scrapped=False, still_active=True, job_service=job_service)
+    def close_spider(self, spider):
+        not_scrapped_items = self.cur.execute("select * from job_offert where still_active='True' "
+                                              "and scrapped='False'")
+            #JobOffert.objects.filter(scrapped=False, still_active=True, job_service=job_service)
         for item in not_scrapped_items:
-            item.still_active = False
-            item.end_date = timezone.now() - timedelta(days=1)
-            item.save()
-        scrapped_items = JobOffert.objects.filter(scrapped=True, job_service=job_service)
+            hash_id = item.hash_id
+            end_date = date.now() - timedelta(days=1)
+            self.cur.execute('UPDATE job_offert SET still_active=False and end_date=end_date WHERE hash_id=hash_id')
+            self.connection.commit()
+
+
+        scrapped_items = self.cur.execute("select * from job_offert where scrapped='True'")
         for item in scrapped_items:
-            item.scrapped = False
-            item.save()
-        return item
+            hash_id = item.hash_id
+            self.cur.execute('UPDATE job_offert SET scrapped=False WHERE hash_id=hash_id')
+            self.connection.commit()
         self.cur.close()
         self.connection.close()
+        return item
+
 
     def create_hash(self, *args):
         m = hashlib.md5()
@@ -58,22 +65,14 @@ class ScrapyJobItPipeline:
         for k in item['keywords']:
             args = args + k
         hash_id = self.create_hash(args)
-        # item['hash_id'] = hash_id
         if hash_id not in hashed_list:
             self.cur.execute(
                 "INSERT INTO job_offert (title, salary_range, company, city,keywords, job_url, scrappy_date, scrapped, "
                 "still_active, job_service, hash_id, open_date, end_date) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"\
                 ,(item['title'], item['salary_range'], item['company'], item['city'], item['keywords'], item['job_url'],
                   date.today(), item['scrapped'], item['still_active'], item['job_service'], hash_id, date.today(), None))
-            # item['hash_id'] = hash_id
-            # # item['scrapped'] = True
-            # item.save()
         else:
             hashed_list.remove(hash_id)
             self.cur.execute('UPDATE job_offert SET scrapped=True WHERE hash_id=hash_id')
-            # old_item = self.cur('select * from jobit_job_offert where hash_id=hash_id')
-            #    # JobOffert.objects.get(hash_id=hash_id)
-            # old_item.scrapped = True
-            # old_item.save(update_fields=['scrapped'])
         self.connection.commit()
         return item
