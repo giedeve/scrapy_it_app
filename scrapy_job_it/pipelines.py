@@ -77,14 +77,17 @@ class ScrapyJobItPipeline:
         #     , (item['title'], item['salary_range'], item['company'], item['city'], item['keywords'], item['job_url'],
         #        date.today(), item['scrapped'], item['still_active'], item['job_service'], hash_id, date.today(), None))
         if hash_id not in hashed_list:
-            print('ZAPIS NOWEGO')
-            self.cur.execute(
-                "INSERT INTO job_offert (title, salary_range, company, city,keywords, job_url, scrappy_date, scrapped, "
-                "still_active, job_service, hash_id, open_date, end_date) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" \
-                ,
-                (item['title'], item['salary_range'], item['company'], item['city'], item['keywords'], item['job_url'],
-                 date.today(), item['scrapped'], item['still_active'], item['job_service'], hash_id, date.today(),
-                 None))
+            #print('ZAPIS NOWEGO')
+            try:
+                self.cur.execute(
+                    "INSERT INTO job_offert (title, salary_range, company, city,keywords, job_url, scrappy_date, scrapped, "
+                    "still_active, job_service, hash_id, open_date, end_date) VALUES (%s,%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)" \
+                    ,
+                    (item['title'], item['salary_range'], item['company'], item['city'], item['keywords'], item['job_url'],
+                     date.today(), item['scrapped'], item['still_active'], item['job_service'], hash_id, date.today(),
+                     None))
+            except Exception as err:
+                pass
         else:
             print('ROBIMY UPDATE')
             hashed_list.remove(hash_id)

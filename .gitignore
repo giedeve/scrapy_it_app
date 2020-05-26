@@ -4,3 +4,4 @@ venv
 myspider.log
 geckodriver.log
 scrapinghub.yml
+__pycache__
