@@ -4,6 +4,7 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
+import os
 import psycopg2
 from decouple import config
 from datetime import date, timedelta
@@ -16,13 +17,15 @@ from django.utils import timezone
 # hashed_items_db = JobOffert.objects.filter(still_active = True)
 # hashed_items_db = JobOffert.objects.all()
 # hashed_list=[item.hash_id for item in hashed_items_db]
-hostname = 'localhost'
-username = 'postgres'
-# config('USERNAME')
-password = 'coderslab'
-# config('PASSWORD')
-database = 'jobit'
-connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+# hostname = 'localhost'
+# username = 'postgres'
+# # config('USERNAME')
+# password = 'coderslab'
+# # config('PASSWORD')
+# database = 'jobit'
+# connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+DATABASE_URL = os.environ['DATABASE_URL']
+connection = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = connection.cursor()
 cur.execute("select array(select hash_id from job_offert where still_active=True)")
 hashed_list = cur.fetchall()[0][0]
@@ -37,11 +40,13 @@ print(hashed_list)
 class ScrapyJobItPipeline:
 
     def open_spider(self, spider):
-        hostname = 'localhost'
-        username = 'postgres'
-        password = config('PASSWORD')
-        database = 'jobit'
-        self.connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+        # hostname = 'localhost'
+        # username = 'postgres'
+        # password = config('PASSWORD')
+        # database = 'jobit'
+        # self.connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+        DATABASE_URL = os.environ['DATABASE_URL']
+        self.connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         self.cur = self.connection.cursor()
 
     def close_spider(self, spider):
