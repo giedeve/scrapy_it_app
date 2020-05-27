@@ -14,9 +14,8 @@ import random
 
 from django.utils import timezone
 
-# hashed_items_db = JobOffert.objects.filter(still_active = True)
-# hashed_items_db = JobOffert.objects.all()
-# hashed_list=[item.hash_id for item in hashed_items_db]
+
+#SETTINGS DB FOR LOCALHOST
 # hostname = 'localhost'
 # username = 'postgres'
 # # config('USERNAME')
@@ -24,6 +23,7 @@ from django.utils import timezone
 # # config('PASSWORD')
 # database = 'jobit'
 # connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+#SETTINGS DB FOR HEROKU
 DATABASE_URL = os.environ['DATABASE_URL']
 connection = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = connection.cursor()
@@ -31,20 +31,16 @@ cur.execute("select array(select hash_id from job_offert where still_active=True
 hashed_list = cur.fetchall()[0][0]
 print(hashed_list)
 
-
-# if hashed_items_db is not None:
-#     hashed_list = [item['hash_id'] for item in hashed_items_db]
-# else:
-#     hashed_list = None
-
 class ScrapyJobItPipeline:
 
     def open_spider(self, spider):
+        #SETTINGS FOR LOCALHOST
         # hostname = 'localhost'
         # username = 'postgres'
         # password = config('PASSWORD')
         # database = 'jobit'
         # self.connection = psycopg2.connect(host=hostname, user=username, password=password, dbname=database)
+        #SETTINGS FOR HEROKU
         DATABASE_URL = os.environ['DATABASE_URL']
         self.connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         self.cur = self.connection.cursor()
