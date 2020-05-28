@@ -15,9 +15,14 @@ class BDcrawlerSpider(scrapy.Spider):
     PAUSE_TIME = 1
     JOB_DETAILS_DIV = "./div[@class='job-details']"
     META_DIV = "div[@class='meta']"
+    options = webdriver.FirefoxOptions()
+    options.binary_location = os.getenv('FIREFOX_BIN')
+    options.add_argument("--headless")
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
     cap = DesiredCapabilities().FIREFOX
     cap["marionette"] = False
-    driver = webdriver.Firefox(capabilities=cap, executable_path=os.getenv('GECKODRIVER_PATH'))
+    driver = webdriver.Firefox(capabilities=cap, executable_path=os.getenv('GECKODRIVER_PATH'), options=options)
     def start_requests(self):
         yield SeleniumRequest(
             url="https://bulldogjob.com/companies/jobs?page=1",
