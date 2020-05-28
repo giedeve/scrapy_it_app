@@ -13,7 +13,7 @@ class BDcrawlerSpider(scrapy.Spider):
     PAUSE_TIME = 1
     JOB_DETAILS_DIV = "./div[@class='job-details']"
     META_DIV = "div[@class='meta']"
-    driver = webdriver.Firefox(executable_path="'geckodriver")
+    driver = webdriver.Firefox()
     def start_requests(self):
         yield SeleniumRequest(
             url="https://bulldogjob.com/companies/jobs?page=1",
