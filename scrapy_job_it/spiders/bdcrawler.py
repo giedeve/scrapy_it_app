@@ -3,6 +3,7 @@ import os
 import scrapy
 from scrapy_selenium import SeleniumRequest
 from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from ..items import ScrapyJobItItem
 from selenium.webdriver.common.keys import Keys
 from scrapy.selector import Selector
@@ -14,7 +15,9 @@ class BDcrawlerSpider(scrapy.Spider):
     PAUSE_TIME = 1
     JOB_DETAILS_DIV = "./div[@class='job-details']"
     META_DIV = "div[@class='meta']"
-    driver = webdriver.Firefox(executable_path=os.getenv('GECKODRIVER_PATH'))
+    cap = DesiredCapabilities().FIREFOX
+    cap["marionette"] = False
+    driver = webdriver.Firefox(capabilities=cap, executable_path=os.getenv('GECKODRIVER_PATH'))
     def start_requests(self):
         yield SeleniumRequest(
             url="https://bulldogjob.com/companies/jobs?page=1",
