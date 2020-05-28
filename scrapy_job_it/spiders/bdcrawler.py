@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import scrapy
 from scrapy_selenium import SeleniumRequest
 from selenium import webdriver
@@ -13,7 +14,7 @@ class BDcrawlerSpider(scrapy.Spider):
     PAUSE_TIME = 1
     JOB_DETAILS_DIV = "./div[@class='job-details']"
     META_DIV = "div[@class='meta']"
-    driver = webdriver.Firefox()
+    driver = webdriver.Firefox(executable_path=os.getenv('GECKODRIVER_PATH'))
     def start_requests(self):
         yield SeleniumRequest(
             url="https://bulldogjob.com/companies/jobs?page=1",
