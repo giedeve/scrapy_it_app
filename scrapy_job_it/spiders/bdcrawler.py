@@ -17,9 +17,9 @@ class BDcrawlerSpider(scrapy.Spider):
     META_DIV = "div[@class='meta']"
     options = webdriver.FirefoxOptions()
     options.binary_location = os.getenv('FIREFOX_BIN')
-    #options.add_argument("--headless")
-    #options.add_argument('--disable-gpu')
-    #options.add_argument('--no-sandbox')
+    options.add_argument("--headless")
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
     cap = DesiredCapabilities().FIREFOX
     #cap["marionette"] = True
     driver = webdriver.Firefox(capabilities=cap, executable_path=os.getenv('GECKODRIVER_PATH'), options=options)
