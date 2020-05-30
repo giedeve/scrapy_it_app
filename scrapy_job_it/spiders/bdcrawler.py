@@ -21,7 +21,7 @@ class BDcrawlerSpider(scrapy.Spider):
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     cap = DesiredCapabilities().FIREFOX
-    #cap["marionette"] = True
+    cap["marionette"] = True
     driver = webdriver.Firefox(capabilities=cap, executable_path=os.getenv('GECKODRIVER_PATH'), options=options)
     def start_requests(self):
         yield SeleniumRequest(
