@@ -57,7 +57,7 @@ ROBOTSTXT_OBEY = True
 #}
 DOWNLOADER_MIDDLEWARES = {
     'scrapy_selenium.SeleniumMiddleware': 800,
-    'scrapy_job_it.middleware.SeleniumMiddleware':200
+    'scrapy_it_app.middleware.SeleniumMiddleware':200
 }
 
 # Enable or disable extensions
