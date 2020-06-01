@@ -5,3 +5,7 @@ myspider.log
 geckodriver.log
 scrapinghub.yml
 __pycache__
+build
+project.egg-info
+scrapinghub.yml
+setup.py
