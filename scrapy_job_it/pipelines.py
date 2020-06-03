@@ -46,15 +46,21 @@ class ScrapyJobItPipeline:
         self.cur = self.connection.cursor()
 
     def close_spider(self, spider):
-
+        global service
+        if spider.name == 'nfjcrawler':
+            service = 'NoFluffJobs'
+        elif spider.name == 'jjcrawler':
+            service = 'JustJoinIT'
+        elif spider.name == 'bdcrawler':
+            service = 'BulldogJob'
         # aktualizacja nie skrapowanych ofert by je zamknąć - end date
         close_date = date.today() - timedelta(days=1)
         self.cur.execute(f"UPDATE job_offert SET end_date = '{close_date}', still_active=False FROM "
-                         "(select * from job_offert where still_active=True and scrapped=False) t "
+                         f"(select * from job_offert where still_active=True and scrapped=False and job_service='{service}') t "
                          "WHERE t.hash_id=job_offert.hash_id")
         # zmiana scrapped na False na kolejne scrapowanie
         self.cur.execute(
-            'UPDATE job_offert SET scrapped=False FROM (select * from job_offert where scrapped=TRUE) t  WHERE t.hash_id=job_offert.hash_id')
+            f"UPDATE job_offert SET scrapped=False FROM (select * from job_offert where scrapped=TRUE and job_service='{service}') t  WHERE t.hash_id=job_offert.hash_id")
         self.connection.commit()
         self.cur.close()
         self.connection.close()
