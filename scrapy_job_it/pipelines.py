@@ -10,9 +10,7 @@ from decouple import config
 from datetime import date, timedelta
 
 import hashlib
-import random
 
-from django.utils import timezone
 
 
 #SETTINGS DB FOR LOCALHOST
