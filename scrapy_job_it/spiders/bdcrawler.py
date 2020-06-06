@@ -93,5 +93,3 @@ class BDcrawlerSpider(scrapy.Spider):
 
             time.sleep(self.PAUSE_TIME)
             response_obj = self.fetch_html(driver)
-        #dodano by zamknąć driver
-        #driver.quit()
