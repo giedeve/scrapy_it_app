@@ -21,7 +21,7 @@ connection = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = connection.cursor()
 cur.execute("select array(select hash_id from job_offert where still_active=True)")
 hashed_list = cur.fetchall()[0][0]
-print(hashed_list)
+#print(hashed_list)
 
 class ScrapyJobItPipeline:
 

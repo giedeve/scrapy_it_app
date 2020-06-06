@@ -21,7 +21,7 @@ class BDcrawlerSpider(scrapy.Spider):
     options.add_argument('--no-sandbox')
     cap = DesiredCapabilities().FIREFOX
     cap["marionette"] = True
-    driver = webdriver.Firefox(capabilities=cap, executable_path=os.getenv('GECKODRIVER_PATH'), options=options)
+    driver = webdriver.Firefox(capabilities=cap, executable_path=os.getenv('GECKODRIVER_PATH'), options=options, log_path=None)
     def start_requests(self):
         yield SeleniumRequest(
             url="https://bulldogjob.com/companies/jobs?page=1",
@@ -93,3 +93,5 @@ class BDcrawlerSpider(scrapy.Spider):
 
             time.sleep(self.PAUSE_TIME)
             response_obj = self.fetch_html(driver)
+        #dodano by zamknąć driver
+        driver.quit()
