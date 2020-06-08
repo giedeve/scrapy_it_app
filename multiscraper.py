@@ -2,6 +2,7 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from twisted.internet import reactor, defer
 from scrapy.crawler import CrawlerRunner
+from scrapy.utils.log import configure_logging
 # Import every spider
 from scrapy_job_it.spiders.bdcrawler import BDcrawlerSpider
 from scrapy_job_it.spiders.nfjcrawler import NfjcrawlerSpider
@@ -12,6 +13,7 @@ from scrapy_job_it.spiders.nfjcrawler import NfjcrawlerSpider
 # process.crawl(BDcrawlerSpider)
 # process.crawl(NfjcrawlerSpider)
 # process.start()
+configure_logging()
 runner = CrawlerRunner()
 @defer.inlineCallbacks
 def crawl():
