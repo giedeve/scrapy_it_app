@@ -7,14 +7,15 @@ from scrapy.utils.log import configure_logging
 from scrapy_job_it.spiders.bdcrawler import BDcrawlerSpider
 from scrapy_job_it.spiders.nfjcrawler import NfjcrawlerSpider
 
-#settings = get_project_settings()
+settings = get_project_settings()
+
 # process = CrawlerProcess()
 # Insert a crawl process for every spider here
 # process.crawl(BDcrawlerSpider)
 # process.crawl(NfjcrawlerSpider)
 # process.start()
 configure_logging()
-runner = CrawlerRunner()
+runner = CrawlerRunner(settings)
 @defer.inlineCallbacks
 def crawl():
     yield runner.crawl(BDcrawlerSpider)
