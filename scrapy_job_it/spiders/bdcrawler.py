@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 import os
 import scrapy
 from scrapy_selenium import SeleniumRequest
@@ -14,6 +15,14 @@ class BDcrawlerSpider(scrapy.Spider):
     PAUSE_TIME = 1
     JOB_DETAILS_DIV = "./div[@class='job-details']"
     META_DIV = "div[@class='meta']"
+    # custom_settings = {
+    #     'LOG_FILE': 'my_spider.log',
+    #     'LOG_LEVEL': 'INFO',
+    #
+    # }
+    logging.basicConfig(filename='my_spider.log', level=logging.DEBUG)
+    logging.getLogger().addHandler(logging.StreamHandler())
+
     options = webdriver.FirefoxOptions()
     options.binary_location = os.getenv('FIREFOX_BIN')
     options.add_argument("--headless")
