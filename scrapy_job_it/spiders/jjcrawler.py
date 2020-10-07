@@ -119,3 +119,4 @@ class JjcrawlerSpider(scrapy.Spider):
 
             search_input.send_keys(Keys.PAGE_DOWN)
             time.sleep(self.SCROLL_PAUSE_TIME)
+        driver.quit()
